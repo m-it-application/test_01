@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Test_Shop01</title>
-  <link rel="icon" href="https://lh3.googleUserContent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" type="image/x-icon">
+  <title>Online Minimore Store</title>
+  <link rel="icon" href="https://lh3.googleUserContent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" />
   <style>
     html, body {
       margin: 0;
@@ -12,11 +12,26 @@
       height: 100%;
       overflow: hidden;
       font-family: sans-serif;
+      display: flex; /* ใช้ Flexbox จัดการ layout */
+      flex-direction: column; /* จัดเรียงแนวตั้ง */
+    }
+    .controls { /* ส่วนของปุ่มควบคุม */
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-bottom: 1px solid #ccc;
+      text-align: center;
+      flex-shrink: 0; /* ไม่ให้ส่วนนี้หด */
+    }
+    .controls button {
+      padding: 8px 16px;
+      font-size: 16px;
+      margin: 0 5px;
+      cursor: pointer;
     }
     .iframe-container {
       position: relative;
       width: 100%;
-      height: 100vh;
+      flex-grow: 1; /* ให้ iframe ขยายเต็มพื้นที่ที่เหลือ */
     }
     iframe {
       width: 100%;
@@ -35,17 +50,44 @@
   </style>
 </head>
 <body>
+  
+  <div class="controls">
+    <button onclick="triggerIframePrint()">📄 พิมพ์ใบเสร็จ</button>
+    <button onclick="triggerIframeDownload()">🖼️ ดาวน์โหลดเป็นรูปภาพ</button>
+  </div>
+
   <div class="iframe-container">
     <div class="loader" id="loader">Loading app...</div>
-    <iframe 
-      src="https://script.google.com/macros/s/AKfycbyz0BjyHlpXOYF2ugtGq4AbM9ppN081Y7UpLK0vLOg7AV3Xjlw4lR0O_kP4BdT88tBj/exec" 
+    <iframe
+      id="app-iframe" 
+      src="https://script.google.com/macros/s/AKfycbwzP27FIJSjb1akQKgkrzcmzqEQg3TLRhNUlUx36VO1PVQLwXRMsMXeRnUMHiVGwcos/exec"
       title="M-IT Support"
-      onload="document.getElementById('loader').style.display='none';"
       allowfullscreen>
     </iframe>
   </div>
+  
+  <script>
+    const iframe = document.getElementById('app-iframe');
+    const loader = document.getElementById('loader');
+    const targetOrigin = 'https://script.google.com'; // ระบุโดเมนของ iframe เพื่อความปลอดภัย
+
+    // ซ่อน Loader เมื่อ iframe โหลดเสร็จ
+    iframe.onload = function () {
+      if (loader) loader.style.display = 'none';
+    };
+
+    // ฟังก์ชันสำหรับส่งคำสั่ง "พิมพ์" ไปยัง iframe
+    function triggerIframePrint() {
+      // ส่งข้อความ 'print-invoice' ไปยัง iframe
+      iframe.contentWindow.postMessage('print-invoice', targetOrigin);
+    }
+
+    // ฟังก์ชันสำหรับส่งคำสั่ง "ดาวน์โหลด" ไปยัง iframe
+    function triggerIframeDownload() {
+      // ส่งข้อความ 'download-invoice' ไปยัง iframe
+      iframe.contentWindow.postMessage('download-invoice', targetOrigin);
+    }
+  </script>
+
 </body>
 </html>
-
-
-
