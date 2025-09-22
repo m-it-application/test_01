@@ -2,56 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Minimore" />
+  <link rel="apple-touch-icon" href="https://lh3.googleUserContent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#4A90E2" />
+
   <title>Online Minimore Store</title>
-  <!-- แก้ favicon ให้ใช้ hosting ที่ถูกต้อง -->
   <link rel="icon" href="https://lh3.googleUserContent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" />
+
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
-      font-family: sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f0f2f5; /* สีพื้นหลังอ่อนๆ */
     }
     .iframe-container {
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 100vh;
+      height: 100%;
     }
     iframe {
       width: 100%;
       height: 100%;
       border: none;
+      visibility: hidden; /* ซ่อน iframe ไว้ก่อนจนกว่าจะโหลดเสร็จ */
     }
+    /* **ปรับปรุง Loader ให้สวยงามขึ้น** */
     .loader {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 1.2rem;
-      color: #666;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
       z-index: 10;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
   </style>
 </head>
 <body>
   <div class="iframe-container">
-    <div class="loader" id="loader">Loading app...</div>
+    <div class="loader" id="loader"></div>
     <iframe 
-      src="https://script.google.com/macros/s/AKfycby41XUHgVRlvJWGa3z4s5U5s8hvogqE1nioogi509-JcpZcveHoFxJPIzOAgTpKynqU/exec" 
+      src="https://script.google.com/macros/s/AKfycbzx0hpl8BVgFYuF4SfNI3RH0jCiOokgV1NXJc6Fv8dg6ZIRMgA-XNL2C8UOTCqnr89p/exec" 
       title="M-IT Support"
-      onload="document.getElementById('loader').style.display='none';"
       allowfullscreen>
     </iframe>
   </div>
-  <!-- ปรับ onload ให้ปลอดภัยขึ้น -->
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const iframe = document.querySelector('iframe');
+      const loader = document.getElementById('loader');
+
       iframe.onload = function () {
-        const loader = document.getElementById('loader');
-        if (loader) loader.style.display = 'none';
+        if (loader) {
+          loader.style.display = 'none';
+        }
+        iframe.style.visibility = 'visible'; // แสดง iframe เมื่อโหลดเสร็จ
       };
     });
   </script>
