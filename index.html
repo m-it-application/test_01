@@ -12,7 +12,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: #f0f2f5;
         }
-    
+
         /* ข้อความแจ้งเตือน */
         .browser-notice {
             display: none;
@@ -54,7 +54,7 @@
         .copy-button:hover {
             background-color: #0056b3;
         }
-    
+
         .iframe-container {
             position: absolute;
             top: 0;
@@ -62,17 +62,19 @@
             width: 100%;
             height: 100%;
             box-sizing: border-box;
-            transition: padding-top 0.3s ease; /* ทำให้เลื่อนกลับเนียนขึ้น */
+            transition: padding-top 0.3s ease;
         }
         .iframe-container.with-notice {
             padding-top: 90px; /* กันไม่ให้โดนทับเฉพาะตอน notice โผล่ */
         }
+
         iframe {
             width: 100%;
             height: 100%;
             border: none;
             visibility: hidden;
         }
+
         .loader {
             position: absolute;
             top: 50%;
@@ -117,7 +119,8 @@
             const copyBtn = document.getElementById('copy-link-btn');
             const mainContent = document.getElementById('main-content');
             let hideTimeout;
-    
+
+            // ตรวจสอบว่าเป็น Chrome ไหม
             function isChrome() {
                 const isChromium = window.chrome;
                 const winNav = window.navigator;
@@ -128,31 +131,36 @@
                 return (isIOSChrome || 
                         (isChromium && vendorName === "Google Inc." && !isOpera && !isEdge));
             }
-    
+
+            // ฟังก์ชันซ่อนแถบแจ้งเตือน
             function hideNotice() {
                 notice.classList.add("hide");
                 mainContent.classList.remove("with-notice"); // เอา padding-top ออก
                 setTimeout(() => { notice.style.display = "none"; }, 500);
             }
-    
+
             if (!isChrome()) {
                 notice.style.display = 'block';
                 mainContent.classList.add("with-notice"); // ใส่ padding-top ตอน notice โผล่
-    
+
+                // ซ่อนอัตโนมัติหลัง 30 วินาที
                 hideTimeout = setTimeout(hideNotice, 30000);
             }
-    
+
+            // โหลด iframe
             iframe.onload = function () {
                 if (loader) loader.style.display = 'none';
                 iframe.style.visibility = 'visible';
             };
-    
+
+            // ปุ่มคัดลอกลิงก์
             copyBtn.addEventListener('click', function() {
                 const urlToCopy = 'https://m-it-application.github.io/test_01/';
                 navigator.clipboard.writeText(urlToCopy).then(function() {
                     copyBtn.textContent = 'คัดลอกแล้ว!';
                     setTimeout(() => copyBtn.textContent = 'คัดลอกลิงก์', 2000);
-    
+
+                    // ซ่อนทันทีเมื่อกดปุ่ม
                     clearTimeout(hideTimeout);
                     hideNotice();
                 });
