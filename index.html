@@ -4,22 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Minimore" />
-    <link rel="apple-touch-icon" href="https://lh3.googleUserContent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" />
-    <link rel="manifest" href="manifest.json" />
-    <meta name="theme-color" content="#4A90E2" />
-
     <title>Online Minimore Store</title>
-    <link rel="icon" href="https://lh3.googleUserContent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" />
-
     <style>
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: #f0f2f5;
         }
@@ -31,10 +21,10 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #ffc107; /* สีเหลืองแจ้งเตือน */
+            background-color: #ffc107;
             color: #333;
             text-align: center;
-            padding: 15px;
+            padding: 12px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             z-index: 1000;
             border-bottom: 3px solid #e0a800;
@@ -44,24 +34,21 @@
             font-size: 1.1rem;
         }
         .browser-notice p {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-size: 0.95rem;
         }
         .copy-button {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 16px;
+            padding: 8px 14px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: background-color 0.3s;
         }
         .copy-button:hover {
             background-color: #0056b3;
-        }
-        .copy-button:active {
-            transform: scale(0.98);
         }
     
         .iframe-container {
@@ -70,6 +57,8 @@
             left: 0;
             width: 100%;
             height: 100%;
+            padding-top: 90px; /* ขยับ iframe ลงเพื่อไม่ให้โดน notice ทับ */
+            box-sizing: border-box;
         }
         iframe {
             width: 100%;
@@ -94,30 +83,13 @@
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
-    
-        /* Responsive สำหรับมือถือ */
-        @media (max-width: 600px) {
-            .browser-notice {
-                padding: 10px;
-            }
-            .browser-notice h4 {
-                font-size: 1rem;
-            }
-            .browser-notice p {
-                font-size: 0.85rem;
-            }
-            .copy-button {
-                padding: 8px 12px;
-                font-size: 0.9rem;
-            }
-        }
     </style>
 </head>
 <body>
 
     <div id="browser-notice" class="browser-notice">
         <h4>⚠️ โปรดเปิดใน Google Chrome</h4>
-        <p>เพื่อประสบการณ์การใช้งานที่ดีที่สุดและสามารถบันทึกใบบินได้ กรุณาเปิดลิงก์นี้ในเบราว์เซอร์ Google Chrome</p>
+        <p>เพื่อประสบการณ์ที่ดีที่สุด กรุณาเปิดลิงก์นี้ใน Google Chrome</p>
         <button id="copy-link-btn" class="copy-button">คัดลอกลิงก์</button>
     </div>
 
@@ -135,60 +107,36 @@
             const iframe = document.querySelector('iframe');
             const loader = document.getElementById('loader');
             const notice = document.getElementById('browser-notice');
-            const mainContent = document.getElementById('main-content');
             const copyBtn = document.getElementById('copy-link-btn');
 
-            // **ฟังก์ชันตรวจสอบเบราว์เซอร์**
+            // ตรวจสอบว่าเป็น Chrome ไหม
             function isChrome() {
-                // ตรวจสอบจาก User Agent String
                 const isChromium = window.chrome;
                 const winNav = window.navigator;
                 const vendorName = winNav.vendor;
                 const isOpera = typeof window.opr !== "undefined";
-                const isIEedge = winNav.userAgent.indexOf("Edg") > -1;
+                const isEdge = winNav.userAgent.indexOf("Edg") > -1;
                 const isIOSChrome = winNav.userAgent.match("CriOS");
-
-                if (isIOSChrome) {
-                   return true;
-                } else if(
-                  isChromium !== null &&
-                  typeof isChromium !== "undefined" &&
-                  vendorName === "Google Inc." &&
-                  isOpera === false &&
-                  isIEedge === false
-                ) {
-                   return true;
-                } else {
-                   return false;
-                }
+                return (isIOSChrome || 
+                        (isChromium && vendorName === "Google Inc." && !isOpera && !isEdge));
             }
 
             if (!isChrome()) {
-                // **ถ้าไม่ใช่ Chrome ให้แสดงข้อความแจ้งเตือน**
-                notice.style.display = 'block';
-                mainContent.style.display = 'none'; // ซ่อนเนื้อหาหลัก
-            } else {
-                // **ถ้าเป็น Chrome ให้โหลดหน้าเว็บตามปกติ**
-                iframe.onload = function () {
-                    if (loader) {
-                        loader.style.display = 'none';
-                    }
-                    iframe.style.visibility = 'visible';
-                };
+                notice.style.display = 'block'; // แสดงแถบแจ้งเตือน แต่ไม่ปิด content
             }
 
-            // **ฟังก์ชันการทำงานของปุ่มคัดลอกลิงก์**
+            // โหลด iframe
+            iframe.onload = function () {
+                if (loader) loader.style.display = 'none';
+                iframe.style.visibility = 'visible';
+            };
+
+            // ปุ่มคัดลอกลิงก์
             copyBtn.addEventListener('click', function() {
                 const urlToCopy = 'https://m-it-application.github.io/test_01/';
                 navigator.clipboard.writeText(urlToCopy).then(function() {
-                    // เมื่อคัดลอกสำเร็จ
                     copyBtn.textContent = 'คัดลอกแล้ว!';
-                    setTimeout(() => {
-                        copyBtn.textContent = 'คัดลอกลิงก์';
-                    }, 2000); // เปลี่ยนข้อความกลับใน 2 วินาที
-                }, function(err) {
-                    // กรณีเกิดข้อผิดพลาด
-                    alert('ไม่สามารถคัดลอกลิงก์ได้: ', err);
+                    setTimeout(() => copyBtn.textContent = 'คัดลอกลิงก์', 2000);
                 });
             });
         });
