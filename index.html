@@ -23,8 +23,8 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: #f0f2f5;
         }
-
-        /* **ส่วนของข้อความแจ้งเตือน** */
+    
+        /* ข้อความแจ้งเตือน */
         .browser-notice {
             display: none; /* ซ่อนไว้เป็นค่าเริ่มต้น */
             position: fixed;
@@ -34,26 +34,27 @@
             background-color: #ffc107; /* สีเหลืองแจ้งเตือน */
             color: #333;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             z-index: 1000;
             border-bottom: 3px solid #e0a800;
         }
         .browser-notice h4 {
-            margin-top: 0;
-            margin-bottom: 10px;
+            margin: 5px 0;
+            font-size: 1.1rem;
         }
         .browser-notice p {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
         }
         .copy-button {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 16px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
             transition: background-color 0.3s;
         }
         .copy-button:hover {
@@ -62,7 +63,7 @@
         .copy-button:active {
             transform: scale(0.98);
         }
-
+    
         .iframe-container {
             position: absolute;
             top: 0;
@@ -92,6 +93,23 @@
         @keyframes spin {
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    
+        /* Responsive สำหรับมือถือ */
+        @media (max-width: 600px) {
+            .browser-notice {
+                padding: 10px;
+            }
+            .browser-notice h4 {
+                font-size: 1rem;
+            }
+            .browser-notice p {
+                font-size: 0.85rem;
+            }
+            .copy-button {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
