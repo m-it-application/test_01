@@ -21,8 +21,7 @@
       display: none;
       position: fixed;
       left: 50%;
-      transform: translateX(-50%) translateY(-20px);
-      opacity: 0;
+      transform: translateX(-50%);
       max-width: 95%;
       width: 600px;
       background-color: #e9f5ff;
@@ -33,37 +32,32 @@
       z-index: 1000;
       border-radius: 10px;
       border: 1px solid #b3d7f2;
-      font-family: "Noto Serif Lao", serif;
+      opacity: 0;
+      visibility: hidden;
       transition: opacity 0.5s ease, transform 0.5s ease;
+      font-family: "Noto Serif Lao", serif;
     }
 
-    /* desktop: อยู่ด้านบน */
+    /* 🔹 ตำแหน่ง desktop (บนจอ) */
     .browser-notice.desktop {
       top: 20px;
+      transform: translateX(-50%) translateY(-40px);
+    }
+    .browser-notice.desktop.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
     }
 
-    /* mobile: อยู่ด้านล่าง */
+    /* 🔹 ตำแหน่ง mobile (ล่างจอ) */
     .browser-notice.mobile {
       bottom: 20px;
       transform: translateX(-50%) translateY(40px);
     }
-
-    /* แสดงผล (fade-in + slide) */
-    .browser-notice.show {
-      display: block;
+    .browser-notice.mobile.show {
       opacity: 1;
+      visibility: visible;
       transform: translateX(-50%) translateY(0);
-    }
-
-    /* ซ่อน (fade-out + slide) */
-    .browser-notice.hide {
-      opacity: 0;
-    }
-    .browser-notice.desktop.hide {
-      transform: translateX(-50%) translateY(-40px);
-    }
-    .browser-notice.mobile.hide {
-      transform: translateX(-50%) translateY(40px);
     }
 
     .browser-notice h4 {
@@ -90,11 +84,11 @@
       background-color: #2980b9;
     }
 
-    /* 🔹 ปุ่มกากบาท (วงกลมอยู่ในกล่อง) */
+    /* 🔹 ปุ่มกากบาท (อยู่ด้านในกล่อง) */
     .close-btn {
       position: absolute;
-      top: 8px;          
-      right: 8px;        
+      top: 8px;
+      right: 8px;
       background: #fff;
       border: 1px solid #ccc;
       border-radius: 50%;
@@ -121,10 +115,6 @@
       left: 0;
       width: 100%;
       height: 100%;
-      transition: padding-top 0.5s ease;
-    }
-    .iframe-container.with-notice {
-      padding-top: 120px; /* เฉพาะ desktop */
     }
     iframe {
       width: 100%;
@@ -152,14 +142,19 @@
 
     /* 🔹 Responsive */
     @media (max-width: 600px) {
-      .browser-notice { font-size: 0.9rem; padding: 10px; }
+      .browser-notice { font-size: 0.9rem; padding: 12px; }
       .browser-notice h4 { font-size: 0.95rem; }
       .copy-button { font-size: 0.85rem; padding: 5px 12px; }
-      .close-btn { width: 24px; height: 24px; font-size: 14px; line-height: 22px; }
+      .close-btn { width: 26px; height: 26px; font-size: 16px; line-height: 24px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- 🔔 เสียงแจ้งเตือน -->
+  <audio id="toast-sound" preload="auto">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-back-2575.mp3" type="audio/mpeg">
+  </audio>
 
   <div id="browser-notice" class="browser-notice">
     <button class="close-btn" id="close-notice">×</button>
@@ -192,7 +187,7 @@
       const notice = document.getElementById('browser-notice');
       const copyBtn = document.getElementById('copy-link-btn');
       const closeBtn = document.getElementById('close-notice');
-      const mainContent = document.getElementById('main-content');
+      const sound = document.getElementById('toast-sound');
       let hideTimeout;
 
       function isChrome() {
@@ -207,7 +202,7 @@
       }
 
       function showNotice() {
-        // ตรวจว่ามือถือหรือไม่
+        // mobile: ล่างจอ, desktop: บนจอ
         if (window.innerWidth <= 600) {
           notice.classList.add("mobile");
         } else {
@@ -215,25 +210,25 @@
         }
 
         notice.style.display = "block";
-        setTimeout(() => notice.classList.add("show"), 10); // trigger animation
+        setTimeout(() => notice.classList.add("show"), 10);
+
+        // 🔔 เล่นเสียงทุกครั้งที่ toast โชว์
+        if (sound) {
+          sound.currentTime = 0;
+          sound.play().catch(()=>{});
+        }
+
+        hideTimeout = setTimeout(hideNotice, 10000);
       }
 
       function hideNotice() {
         notice.classList.remove("show");
-        notice.classList.add("hide");
-        mainContent.classList.remove("with-notice");
-        setTimeout(() => { 
-          notice.style.display = "none"; 
-          notice.classList.remove("hide", "desktop", "mobile"); 
-        }, 500);
+        clearTimeout(hideTimeout);
+        setTimeout(() => { notice.style.display = "none"; }, 500);
       }
 
       if (!isChrome()) {
         showNotice();
-        if (window.innerWidth > 600) {
-          mainContent.classList.add("with-notice"); // desktop only
-        }
-        hideTimeout = setTimeout(hideNotice, 10000);
       }
 
       iframe.onload = function () {
@@ -246,14 +241,11 @@
         navigator.clipboard.writeText(urlToCopy).then(function() {
           copyBtn.textContent = '✅ คัดลอกแล้ว';
           setTimeout(() => copyBtn.textContent = 'Copy ລິ້ງ', 2000);
-          clearTimeout(hideTimeout);
           hideNotice();
         });
       });
 
-      // 🔹 ปุ่มกากบาทปิดแจ้งเตือน
       closeBtn.addEventListener('click', function() {
-        clearTimeout(hideTimeout);
         hideNotice();
       });
     });
