@@ -62,7 +62,7 @@
             width: 100%;
             height: 100%;
             box-sizing: border-box;
-            transition: padding-top 0.3s ease;
+            transition: padding-top 0.5s ease; /* ทำให้เลื่อนเนียนขึ้น */
         }
         .iframe-container.with-notice {
             padding-top: 90px; /* กันไม่ให้โดนทับเฉพาะตอน notice โผล่ */
@@ -135,7 +135,7 @@
             // ฟังก์ชันซ่อนแถบแจ้งเตือน
             function hideNotice() {
                 notice.classList.add("hide");
-                mainContent.classList.remove("with-notice"); // เอา padding-top ออก
+                mainContent.classList.remove("with-notice"); // เอา padding-top ออกแบบ smooth
                 setTimeout(() => { notice.style.display = "none"; }, 500);
             }
 
@@ -143,8 +143,8 @@
                 notice.style.display = 'block';
                 mainContent.classList.add("with-notice"); // ใส่ padding-top ตอน notice โผล่
 
-                // ซ่อนอัตโนมัติหลัง 30 วินาที
-                hideTimeout = setTimeout(hideNotice, 30000);
+                // ซ่อนอัตโนมัติหลัง 10 วินาที
+                hideTimeout = setTimeout(hideNotice, 10000);
             }
 
             // โหลด iframe
