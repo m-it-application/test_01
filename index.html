@@ -21,7 +21,7 @@
       height: 100%;
       overflow: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: #f0f2f5; /* สีพื้นหลังอ่อนๆ */
+      background-color: #f0f2f5;
     }
     .iframe-container {
       position: absolute;
@@ -34,9 +34,8 @@
       width: 100%;
       height: 100%;
       border: none;
-      visibility: hidden; /* ซ่อน iframe ไว้ก่อนจนกว่าจะโหลดเสร็จ */
+      visibility: hidden;
     }
-    /* **ปรับปรุง Loader ให้สวยงามขึ้น** */
     .loader {
       position: absolute;
       top: 50%;
@@ -54,30 +53,83 @@
       0% { transform: translate(-50%, -50%) rotate(0deg); }
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
+    /* -- ส่วนที่เพิ่มเข้ามาสำหรับแจ้งเตือน -- */
+    #browser-notice {
+      display: none; /* ซ่อนไว้ก่อนเป็นค่าเริ่มต้น */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      z-index: 20;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .notice-content {
+      padding: 20px;
+      max-width: 90%;
+    }
+    .notice-content h2 {
+      margin-top: 0;
+    }
+    .notice-content a {
+      color: #87cefa;
+    }
   </style>
 </head>
 <body>
-  <div class="iframe-container">
+  
+  <div class="iframe-container" id="main-content">
     <div class="loader" id="loader"></div>
-    <iframe 
-      src="https://script.google.com/macros/s/AKfycbxjtwAL5mmKhuie1NF7Kbn0T4T21pyprBchqG_n6eW7EQC1Og16YUijHMKewbHVEUbf/exec" 
+    <iframe  
+      src="https://script.google.com/macros/s/AKfycbw1nBYxr63UN7iAx_wpSOlbCev54l9ryaCZ_bSR_0vFgBkSglOq3fqVX5aeCluaCNkF/exec"  
       title="M-IT Support"
       allowfullscreen>
     </iframe>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const iframe = document.querySelector('iframe');
-      const loader = document.getElementById('loader');
+  <div id="browser-notice">
+    <div class="notice-content">
+      <h2>เพื่อประสบการณ์การใช้งานที่ดีที่สุด</h2>
+      <p>กรุณาเปิดเว็บไซต์นี้ใน Google Chrome</p>
+      <p>
+        <a href="https://www.google.com/chrome/">ดาวน์โหลด Chrome ที่นี่</a>
+      </p>
+    </div>
+  </div>
 
-      iframe.onload = function () {
-        if (loader) {
-          loader.style.display = 'none';
-        }
-        iframe.style.visibility = 'visible'; // แสดง iframe เมื่อโหลดเสร็จ
-      };
-    });
+  <script>
+    // --- โค้ดสำหรับตรวจสอบเบราว์เซอร์ ---
+    function checkBrowser() {
+      const userAgent = navigator.userAgent;
+      const isChrome = userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Edg") === -1; // เป็น Chrome แต่ไม่ใช่ Edge
+      const mainContent = document.getElementById('main-content');
+      const notice = document.getElementById('browser-notice');
+      
+      if (!isChrome) {
+        // ถ้าไม่ใช่ Chrome ให้ซ่อนเนื้อหาหลักและแสดงข้อความแจ้งเตือน
+        if (mainContent) mainContent.style.display = 'none';
+        if (notice) notice.style.display = 'flex'; // ใช้ flex เพื่อจัดให้อยู่กึ่งกลาง
+      } else {
+        // ถ้าเป็น Chrome ให้ทำงานตามปกติ
+        const iframe = document.querySelector('iframe');
+        const loader = document.getElementById('loader');
+
+        iframe.onload = function () {
+          if (loader) {
+            loader.style.display = 'none';
+          }
+          iframe.style.visibility = 'visible';
+        };
+      }
+    }
+    
+    // เรียกใช้ฟังก์ชันเมื่อหน้าเว็บโหลดเสร็จ
+    document.addEventListener('DOMContentLoaded', checkBrowser);
   </script>
 </body>
 </html>
