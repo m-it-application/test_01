@@ -20,9 +20,9 @@
     .browser-notice {
       display: none;
       position: fixed;
-      top: 0;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateY(-20px);
+      opacity: 0;
       max-width: 95%;
       width: 600px;
       background-color: #e9f5ff;
@@ -33,14 +33,39 @@
       z-index: 1000;
       border-radius: 10px;
       border: 1px solid #b3d7f2;
-      transition: opacity 0.5s ease, visibility 0.5s ease, top 0.5s ease;
       font-family: "Noto Serif Lao", serif;
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
+
+    /* desktop: อยู่ด้านบน */
+    .browser-notice.desktop {
+      top: 20px;
+    }
+
+    /* mobile: อยู่ด้านล่าง */
+    .browser-notice.mobile {
+      bottom: 20px;
+      transform: translateX(-50%) translateY(40px);
+    }
+
+    /* แสดงผล (fade-in + slide) */
+    .browser-notice.show {
+      display: block;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ซ่อน (fade-out + slide) */
     .browser-notice.hide {
       opacity: 0;
-      visibility: hidden;
+    }
+    .browser-notice.desktop.hide {
       transform: translateX(-50%) translateY(-40px);
     }
+    .browser-notice.mobile.hide {
+      transform: translateX(-50%) translateY(40px);
+    }
+
     .browser-notice h4 {
       margin: 6px 0;
       font-size: 1rem;
@@ -99,7 +124,7 @@
       transition: padding-top 0.5s ease;
     }
     .iframe-container.with-notice {
-      padding-top: 120px; /* เว้นเพิ่มเผื่อปุ่ม */
+      padding-top: 120px; /* เฉพาะ desktop */
     }
     iframe {
       width: 100%;
@@ -181,15 +206,33 @@
                 (isChromium && vendorName === "Google Inc." && !isOpera && !isEdge));
       }
 
+      function showNotice() {
+        // ตรวจว่ามือถือหรือไม่
+        if (window.innerWidth <= 600) {
+          notice.classList.add("mobile");
+        } else {
+          notice.classList.add("desktop");
+        }
+
+        notice.style.display = "block";
+        setTimeout(() => notice.classList.add("show"), 10); // trigger animation
+      }
+
       function hideNotice() {
+        notice.classList.remove("show");
         notice.classList.add("hide");
         mainContent.classList.remove("with-notice");
-        setTimeout(() => { notice.style.display = "none"; }, 500);
+        setTimeout(() => { 
+          notice.style.display = "none"; 
+          notice.classList.remove("hide", "desktop", "mobile"); 
+        }, 500);
       }
 
       if (!isChrome()) {
-        notice.style.display = 'block';
-        mainContent.classList.add("with-notice");
+        showNotice();
+        if (window.innerWidth > 600) {
+          mainContent.classList.add("with-notice"); // desktop only
+        }
         hideTimeout = setTimeout(hideNotice, 10000);
       }
 
