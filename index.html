@@ -1,189 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>Online Minimore Store</title>
-    <!-- แก้ favicon ให้ใช้ hosting ที่ถูกต้อง -->
-    <link rel="icon" href="https://lh3.googleUserContent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Online Minimore Store</title>
+  <link rel="icon" href="https://lh3.googleUserContent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Lao&display=swap" rel="stylesheet">
 
-    <!-- โหลดฟอนต์ Noto Serif Lao -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Lao&display=swap" rel="stylesheet">
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f0f2f5;
-        }
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f0f2f5;
+    }
 
-        /* ข้อความแจ้งเตือน */
-        .browser-notice {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #e9f5ff; /* ฟ้าอ่อนแทนเหลือง */
-            color: #2c3e50;
-            text-align: center;
-            padding: 14px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-            z-index: 1000;
-            border-bottom: 2px solid #b3d7f2; /* ขอบบางลง */
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-            font-family: "Noto Serif Lao", serif;
-        }
-        .browser-notice.hide {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .browser-notice h4 {
-            margin: 6px 0;
-            font-size: 1.05rem;
-            font-weight: 600;
-        }
-        .browser-notice p {
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-        .copy-button {
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s;
-        }
-        .copy-button:hover {
-            background-color: #2980b9;
-        }
+    /* 🔹 กล่องแจ้งเตือน */
+    .browser-notice {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 95%;
+      width: 600px;
+      background-color: #e9f5ff;
+      color: #2c3e50;
+      text-align: center;
+      padding: 14px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      z-index: 1000;
+      border-radius: 10px;
+      border: 1px solid #b3d7f2;
+      transition: opacity 0.5s ease, visibility 0.5s ease, top 0.5s ease;
+      font-family: "Noto Serif Lao", serif;
+    }
+    .browser-notice.hide {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-50%) translateY(-40px);
+    }
+    .browser-notice h4 {
+      margin: 6px 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .browser-notice p {
+      margin: 6px 0 10px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    .copy-button {
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+    .copy-button:hover {
+      background-color: #2980b9;
+    }
 
-        .iframe-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            box-sizing: border-box;
-            transition: padding-top 0.5s ease; /* ทำให้เลื่อนเนียนขึ้น */
-        }
-        .iframe-container.with-notice {
-            padding-top: 90px; /* กันไม่ให้โดนทับเฉพาะตอน notice โผล่ */
-        }
+    /* 🔹 ปุ่มกากบาท (เลื่อนตามกล่อง) */
+    .close-btn {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: background 0.3s, color 0.3s;
+      line-height: 26px;
+      text-align: center;
+    }
+    .close-btn:hover {
+      background: #f8d7da;
+      color: #e74c3c;
+    }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            visibility: hidden;
-        }
+    /* 🔹 Container + Loader */
+    .iframe-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transition: padding-top 0.5s ease;
+    }
+    .iframe-container.with-notice {
+      padding-top: 120px; /* เว้นเพิ่มเผื่อปุ่ม */
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      visibility: hidden;
+    }
+    .loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      z-index: 10;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
 
-        .loader {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #3498db;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            z-index: 10;
-        }
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-    </style>
+    /* 🔹 Responsive */
+    @media (max-width: 600px) {
+      .browser-notice { font-size: 0.9rem; padding: 10px; }
+      .browser-notice h4 { font-size: 0.95rem; }
+      .copy-button { font-size: 0.85rem; padding: 5px 12px; }
+      .close-btn { width: 26px; height: 26px; font-size: 16px; line-height: 24px; }
+    }
+  </style>
 </head>
 <body>
 
-    <div id="browser-notice" class="browser-notice">
-        <h4>💡 ແນະນຳໃຫ້ໃຊ້ 
-            <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" 
-                 alt="Google Chrome" 
-                 style="width:22px; height:22px; vertical-align:middle; margin-right:6px;">
-            Google Chrome
-        </h4>
-        <p>ເພື່ອປະສົບການໃນການທ່ອງເວັບທີ່ລື່ນໄຫລ 👉 ກະລຸນາ Copy ລິ້ງນີ້ໄປເປີດໃນ 
-            <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" 
-                 alt="Google Chrome" 
-                 style="width:22px; height:22px; vertical-align:middle; margin-right:6px;">
-            Google Chrome
-        </p>
-        <button id="copy-link-btn" class="copy-button">Copy ລິ້ງ</button>
-    </div>
+  <div id="browser-notice" class="browser-notice">
+    <button class="close-btn" id="close-notice">×</button>
+    <h4>💡 ແນະນຳໃຫ້ໃຊ້ 
+      <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" 
+           alt="Google Chrome" 
+           style="width:18px; height:18px; vertical-align:middle; margin-right:4px;">
+      Google Chrome
+    </h4>
+    <p>
+      ເພື່ອປະສົບການໃນການທ່ອງເວັບທີ່ລື່ນໄຫລ 👉 
+      ກະລຸນາ Copy ລິ້ງນີ້ໄປເປີດໃນ Chrome
+    </p>
+    <button id="copy-link-btn" class="copy-button">Copy ລິ້ງ</button>
+  </div>
 
-    <div class="iframe-container" id="main-content">
-        <div class="loader" id="loader"></div>
-        <iframe
-            src="https://script.google.com/macros/s/AKfycbw1nBYxr63UN7iAx_wpSOlbCev54l9ryaCZ_bSR_0vFgBkSglOq3fqVX5aeCluaCNkF/exec"
-            title="M-IT Support"
-            allowfullscreen>
-        </iframe>
-    </div>
+  <div class="iframe-container" id="main-content">
+    <div class="loader" id="loader"></div>
+    <iframe
+      src="https://script.google.com/macros/s/AKfycbw1nBYxr63UN7iAx_wpSOlbCev54l9ryaCZ_bSR_0vFgBkSglOq3fqVX5aeCluaCNkF/exec"
+      title="M-IT Support"
+      allowfullscreen>
+    </iframe>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const iframe = document.querySelector('iframe');
-            const loader = document.getElementById('loader');
-            const notice = document.getElementById('browser-notice');
-            const copyBtn = document.getElementById('copy-link-btn');
-            const mainContent = document.getElementById('main-content');
-            let hideTimeout;
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const iframe = document.querySelector('iframe');
+      const loader = document.getElementById('loader');
+      const notice = document.getElementById('browser-notice');
+      const copyBtn = document.getElementById('copy-link-btn');
+      const closeBtn = document.getElementById('close-notice');
+      const mainContent = document.getElementById('main-content');
+      let hideTimeout;
 
-            // ตรวจสอบว่าเป็น Chrome ไหม
-            function isChrome() {
-                const isChromium = window.chrome;
-                const winNav = window.navigator;
-                const vendorName = winNav.vendor;
-                const isOpera = typeof window.opr !== "undefined";
-                const isEdge = winNav.userAgent.indexOf("Edg") > -1;
-                const isIOSChrome = winNav.userAgent.match("CriOS");
-                return (isIOSChrome || 
-                        (isChromium && vendorName === "Google Inc." && !isOpera && !isEdge));
-            }
+      function isChrome() {
+        const isChromium = window.chrome;
+        const winNav = window.navigator;
+        const vendorName = winNav.vendor;
+        const isOpera = typeof window.opr !== "undefined";
+        const isEdge = winNav.userAgent.indexOf("Edg") > -1;
+        const isIOSChrome = winNav.userAgent.match("CriOS");
+        return (isIOSChrome || 
+                (isChromium && vendorName === "Google Inc." && !isOpera && !isEdge));
+      }
 
-            // ฟังก์ชันซ่อนแถบแจ้งเตือน
-            function hideNotice() {
-                notice.classList.add("hide");
-                mainContent.classList.remove("with-notice"); // เอา padding-top ออกแบบ smooth
-                setTimeout(() => { notice.style.display = "none"; }, 500);
-            }
+      function hideNotice() {
+        notice.classList.add("hide");
+        mainContent.classList.remove("with-notice");
+        setTimeout(() => { notice.style.display = "none"; }, 500);
+      }
 
-            if (!isChrome()) {
-                notice.style.display = 'block';
-                mainContent.classList.add("with-notice"); // ใส่ padding-top ตอน notice โผล่
+      if (!isChrome()) {
+        notice.style.display = 'block';
+        mainContent.classList.add("with-notice");
+        hideTimeout = setTimeout(hideNotice, 10000);
+      }
 
-                // ซ่อนอัตโนมัติหลัง 10 วินาที
-                hideTimeout = setTimeout(hideNotice, 10000);
-            }
+      iframe.onload = function () {
+        loader.style.display = 'none';
+        iframe.style.visibility = 'visible';
+      };
 
-            // โหลด iframe
-            iframe.onload = function () {
-                if (loader) loader.style.display = 'none';
-                iframe.style.visibility = 'visible';
-            };
-
-            // ปุ่มคัดลอกลิงก์
-            copyBtn.addEventListener('click', function() {
-                const urlToCopy = 'https://m-it-application.github.io/test_01/';
-                navigator.clipboard.writeText(urlToCopy).then(function() {
-                    copyBtn.textContent = 'คัดลอกแล้ว!';
-                    setTimeout(() => copyBtn.textContent = 'คัดลอกลิงก์', 2000);
-
-                    // ซ่อนทันทีเมื่อกดปุ่ม
-                    clearTimeout(hideTimeout);
-                    hideNotice();
-                });
-            });
+      copyBtn.addEventListener('click', function() {
+        const urlToCopy = 'https://m-it-application.github.io/test_01/';
+        navigator.clipboard.writeText(urlToCopy).then(function() {
+          copyBtn.textContent = '✅ คัดลอกแล้ว';
+          setTimeout(() => copyBtn.textContent = 'Copy ລິ້ງ', 2000);
+          clearTimeout(hideTimeout);
+          hideNotice();
         });
-    </script>
+      });
+
+      // 🔹 ปุ่มกากบาทปิดแจ้งเตือน
+      closeBtn.addEventListener('click', function() {
+        clearTimeout(hideTimeout);
+        hideNotice();
+      });
+    });
+  </script>
 </body>
 </html>
