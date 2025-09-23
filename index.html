@@ -19,35 +19,34 @@
         }
 
         /* ข้อความแจ้งเตือน */
-        .browser-popup {
-            display: none; /* เริ่มต้นซ่อน */
+        .browser-notice {
+            display: none;
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            max-width: 300px;
-            background-color: #ffffff;
-            border: 1px solid #dce6f0;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
-            font-family: "Noto Serif Lao", serif;
-            animation: slideUp 0.4s ease-out;
-        }
-        .popup-content {
-            padding: 16px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #e9f5ff; /* ฟ้าอ่อนแทนเหลือง */
             color: #2c3e50;
+            text-align: center;
+            padding: 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            z-index: 1000;
+            border-bottom: 2px solid #b3d7f2; /* ขอบบางลง */
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            font-family: "Noto Serif Lao", serif;
         }
-        .browser-popup h4 {
-            margin: 0 0 8px;
-            font-size: 1rem;
+        .browser-notice.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .browser-notice h4 {
+            margin: 6px 0;
+            font-size: 1.05rem;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
-        .browser-popup p {
-            margin: 0 0 12px;
-            font-size: 0.9rem;
+        .browser-notice p {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
             line-height: 1.4;
         }
         .copy-button {
@@ -57,23 +56,11 @@
             padding: 6px 14px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             transition: background-color 0.3s;
         }
         .copy-button:hover {
             background-color: #2980b9;
-        }
-        
-        /* แอนิเมชันเด้งขึ้น */
-        @keyframes slideUp {
-            from {
-                transform: translateY(30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
 
         .iframe-container {
@@ -117,22 +104,20 @@
 </head>
 <body>
 
-    <div id="browser-popup" class="browser-popup">
-        <div class="popup-content">
-            <h4>💡 ແນະນຳໃຫ້ໃຊ້ 
-                <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" 
-                     alt="Google Chrome" 
-                     style="width:20px; height:20px; vertical-align:middle; margin-right:4px;">
-                Google Chrome
-            </h4>
-            <p>ເພື່ອປະສົບການໃນການທ່ອງເວັບທີ່ລື່ນໄຫລ 👉 ກະລຸນາ Copy ລິ້ງນີ້ໄປເປີດໃນ 
-                <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" 
-                     alt="Google Chrome" 
-                     style="width:20px; height:20px; vertical-align:middle; margin-right:4px;">
-                Google Chrome
-            </p>
-            <button id="copy-link-btn" class="copy-button">Copy ລິ້ງ</button>
-        </div>
+    <div id="browser-notice" class="browser-notice">
+        <h4>💡 ແນະນຳໃຫ້ໃຊ້ 
+            <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" 
+                 alt="Google Chrome" 
+                 style="width:22px; height:22px; vertical-align:middle; margin-right:6px;">
+            Google Chrome
+        </h4>
+        <p>ເພື່ອປະສົບການໃນການທ່ອງເວັບທີ່ລື່ນໄຫລ 👉 ກະລຸນາ Copy ລິ້ງນີ້ໄປເປີດໃນ 
+            <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" 
+                 alt="Google Chrome" 
+                 style="width:22px; height:22px; vertical-align:middle; margin-right:6px;">
+            Google Chrome
+        </p>
+        <button id="copy-link-btn" class="copy-button">Copy ລິ້ງ</button>
     </div>
 
     <div class="iframe-container" id="main-content">
@@ -198,25 +183,6 @@
                     hideNotice();
                 });
             });
-        });
-
-        window.addEventListener("load", function() {
-            const popup = document.getElementById("browser-popup");
-            popup.style.display = "block";
-    
-            // ซ่อนอัตโนมัติหลัง 10 วิ (ถ้าอยาก)
-            setTimeout(() => {
-                popup.style.display = "none";
-            }, 10000);
-        });
-    
-        // ปุ่ม Copy
-        document.getElementById("copy-link-btn").addEventListener("click", function() {
-            navigator.clipboard.writeText(window.location.href);
-            this.textContent = "✅ ຄັດລອກແລ້ວ";
-            setTimeout(() => {
-                this.textContent = "Copy ລິ້ງ";
-            }, 2000);
         });
     </script>
 </body>
