@@ -14,97 +14,56 @@
     <title>Online Minimore Store</title>
     <link rel="icon" href="https://lh3.googleUserContent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" />
 
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f0f2f5;
-        }
-
-        /* --- ส่วนเนื้อหาปกติ (สำหรับ Chrome) --- */
-        .iframe-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none; /* ซ่อนไว้ก่อนเป็นค่าเริ่มต้น */
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            visibility: hidden;
-        }
-        .loader {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #3498db;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            z-index: 10;
-        }
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        /* --- ส่วนแจ้งเตือน (สำหรับเบราว์เซอร์อื่น) --- */
-        .browser-warning {
-            display: none; /* ซ่อนไว้ก่อนเป็นค่าเริ่มต้น */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        .browser-warning img {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 20px;
-        }
-        .browser-warning h2 {
-            margin-top: 0;
-            font-size: 1.5rem;
-            color: #333;
-        }
-        .browser-warning p {
-            color: #666;
-            max-width: 400px;
-        }
-        .copy-button {
-            background-color: #4285F4; /* Google Blue */
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.2s;
-        }
-        .copy-button:hover {
-            background-color: #357ae8;
-        }
-        .copy-message {
-            margin-top: 15px;
-            font-size: 0.9rem;
-            color: green;
-            font-weight: bold;
-            height: 20px; /* จองพื้นที่ไว้กันหน้ากระตุก */
-        }
-    </style>
+<style>
+    #chrome-warning {
+        display: none; /* ซ่อนไว้ก่อนเป็นค่าเริ่มต้น */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.95);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    #chrome-warning img {
+        width: 70px;
+        margin-bottom: 20px;
+    }
+    #chrome-warning h2 {
+        font-size: 1.4rem;
+        color: #333;
+    }
+    #chrome-warning p {
+        color: #555;
+        margin-bottom: 30px;
+    }
+    .action-button {
+        display: inline-block;
+        padding: 12px 25px;
+        margin: 5px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        font-size: 1rem;
+    }
+    #open-in-chrome-btn {
+        background-color: #4285F4; /* สีน้ำเงิน Google */
+    }
+    #copy-link-btn {
+        background-color: #0F9D58; /* สีเขียว Google */
+    }
+</style>
 </head>
 <body>
 
@@ -117,60 +76,53 @@
         </iframe>
     </div>
 
-    <div class="browser-warning" id="browser-warning">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Chrome_icon_%28September_2014%29.svg" alt="Google Chrome Icon" />
-        <h2>กรุณาเปิดใน Google Chrome</h2>
-        <p>เพื่อประสบการณ์การใช้งานที่ดีที่สุด<br>กรุณาคัดลอกลิงก์และนำไปเปิดในเบราว์เซอร์ Google Chrome</p>
-        <button class="copy-button" id="copy-link-btn">คัดลอกลิงก์</button>
-        <p class="copy-message" id="copy-message"></p>
+    <div id="chrome-warning">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Chrome_icon_%28September_2014%29.svg" alt="Google Chrome Logo">
+        <h2>ต้องใช้เบราว์เซอร์ Google Chrome เท่านั้น</h2>
+        <p>
+            เพื่อบันทึกใบเสร็จการซื้อ<br>กรุณาดำเนินการต่อใน Google Chrome
+        </p>
+        <div>
+            <a href="#" id="open-in-chrome-btn" class="action-button">เปิดใน Chrome</a>
+            
+            <button id="copy-link-btn" class="action-button">คัดลอกลิงก์</button>
+        </div>
+        <p id="copy-feedback" style="margin-top:20px; color:green; font-weight:bold;"></p>
     </div>
 
-
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', () => {
             const userAgent = navigator.userAgent;
-            // ตรวจสอบว่าเป็น Chrome และไม่ใช่ Edge (Chromium)
-            const isChrome = userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Edg") === -1;
-
-            const chromeContent = document.querySelector('.iframe-container');
-            const warningContent = document.getElementById('browser-warning');
-
-            if (isChrome) {
-                // ถ้าเป็น Chrome ให้แสดงเนื้อหา iframe
-                chromeContent.style.display = 'block';
-
-                const iframe = document.querySelector('iframe');
-                const loader = document.getElementById('loader');
-                iframe.onload = function () {
-                    if (loader) {
-                        loader.style.display = 'none';
-                    }
-                    iframe.style.visibility = 'visible';
-                };
-
-            } else {
-                // ถ้าไม่ใช่ Chrome ให้แสดงหน้าแจ้งเตือน
-                warningContent.style.display = 'flex';
-
+            // ตรวจสอบว่าเป็น Chrome และไม่ใช่เบราว์เซอร์อื่นที่ใช้ Engine เดียวกันเช่น Edge
+            const isChrome = userAgent.includes("Chrome") && !userAgent.includes("Edg");
+        
+            const warningBox = document.getElementById('chrome-warning');
+        
+            // ถ้าไม่ใช่ Chrome ให้แสดงกล่องข้อความ
+            if (!isChrome) {
+                warningBox.style.display = 'flex';
+        
+                const currentUrl = window.location.href;
+                const openBtn = document.getElementById('open-in-chrome-btn');
                 const copyBtn = document.getElementById('copy-link-btn');
-                const copyMessage = document.getElementById('copy-message');
-                const linkToCopy = 'https://m-it-application.github.io/test_01/';
-
+                const feedback = document.getElementById('copy-feedback');
+        
+                // 1. ตั้งค่าลิงก์สำหรับปุ่ม "เปิดใน Chrome" (สำหรับมือถือ)
+                // ใช้ URL Scheme ของ Chrome
+                openBtn.href = `googlechrome://navigate?url=${encodeURIComponent(currentUrl)}`;
+        
+                // 2. ตั้งค่าการทำงานของปุ่ม "คัดลอกลิงก์"
                 copyBtn.addEventListener('click', () => {
-                    navigator.clipboard.writeText(linkToCopy).then(() => {
-                        // เมื่อคัดลอกสำเร็จ
+                    navigator.clipboard.writeText(currentUrl).then(() => {
+                        feedback.textContent = 'คัดลอกลิงก์สำเร็จแล้ว!';
                         copyBtn.textContent = 'คัดลอกแล้ว!';
-                        copyMessage.textContent = 'คัดลอกสำเร็จ! นำไปวางใน Chrome ได้เลย';
-
-                        // เปลี่ยนข้อความกลับใน 3 วินาที
                         setTimeout(() => {
+                            feedback.textContent = '';
                             copyBtn.textContent = 'คัดลอกลิงก์';
-                            copyMessage.textContent = '';
                         }, 3000);
-
                     }).catch(err => {
-                        console.error('Failed to copy: ', err);
-                        copyMessage.textContent = 'คัดลอกไม่สำเร็จ';
+                        feedback.textContent = 'เกิดข้อผิดพลาดในการคัดลอก';
+                        console.error('Copy failed', err);
                     });
                 });
             }
