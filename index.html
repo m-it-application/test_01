@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="lo">
+<html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Online Minimore Store</title>
-  <link rel="icon" href="https://lh3.googleusercontent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" />
+  <link rel="icon" href="https://lh3.googleUserContent.com/d/1n6WREaza8QhZFQFLvpZYD0wzYXSwK0aF" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Lao&display=swap" rel="stylesheet">
 
   <style>
@@ -24,32 +25,29 @@
       display: none;
       position: fixed;
       left: 50%;
-      -webkit-transform: translateX(-50%) translateY(-20px);
       transform: translateX(-50%) translateY(-20px);
       opacity: 0;
-      max-width: 95%;
-      width: 600px;
-      background-color: #e9f5ff;
+      max-width: 92%;
+      width: 580px;
+      background-color: #ffffff;
       color: #2c3e50;
       text-align: center;
-      padding: 14px 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 18px 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
       z-index: 1000;
-      border-radius: 10px;
-      border: 1px solid #b3d7f2;
+      border-radius: 14px;
+      border: 1px solid #d6e9f9;
       font-family: "Noto Serif Lao", serif;
-      -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
       transition: opacity 0.5s ease, transform 0.5s ease;
       will-change: opacity, transform;
     }
 
     /* desktop: อยู่ด้านบน */
-    .browser-notice.desktop { top: 20px; }
+    .browser-notice.desktop { top: 28px; }
 
     /* mobile: อยู่ด้านล่าง */
     .browser-notice.mobile {
       bottom: 20px;
-      -webkit-transform: translateX(-50%) translateY(40px);
       transform: translateX(-50%) translateY(40px);
     }
 
@@ -57,58 +55,61 @@
     .browser-notice.show {
       display: block;
       opacity: 1;
-      -webkit-transform: translateX(-50%) translateY(0);
       transform: translateX(-50%) translateY(0);
     }
 
-    /* ซ่อน (fade-out + slide) */
+    /* ซ่อน */
     .browser-notice.hide { opacity: 0; }
-    .browser-notice.desktop.hide {
-      -webkit-transform: translateX(-50%) translateY(-40px);
-      transform: translateX(-50%) translateY(-40px);
-    }
-    .browser-notice.mobile.hide {
-      -webkit-transform: translateX(-50%) translateY(40px);
-      transform: translateX(-50%) translateY(40px);
-    }
+    .browser-notice.desktop.hide { transform: translateX(-50%) translateY(-40px); }
+    .browser-notice.mobile.hide { transform: translateX(-50%) translateY(40px); }
 
     .browser-notice h4 {
-      margin: 6px 0;
-      font-size: 1rem;
+      margin: 10px 0 8px;
+      font-size: 1.05rem;
       font-weight: 600;
       display: flex;
-      align-items: center;
+      flex-wrap: wrap;
       justify-content: center;
-      gap: 8px;
+      align-items: center;
+      gap: 6px;
+      line-height: 1.5;
+    }
+    .browser-notice h4 img {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
     }
     .browser-notice p {
-      margin: 6px 0 10px;
-      font-size: 0.9rem;
-      line-height: 1.4;
+      margin: 6px 0 14px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #34495e;
     }
+
     .copy-button {
       background-color: #3498db;
       color: #fff;
       border: none;
-      padding: 6px 14px;
-      border-radius: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 0.9rem;
-      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      transition: background-color 0.3s, transform 0.15s;
       -webkit-tap-highlight-color: transparent;
     }
     .copy-button:hover { background-color: #2980b9; }
+    .copy-button:active { transform: scale(0.96); }
 
-    /* 🔹 ปุ่มกากบาท (เรียบ อยู่ในกล่อง) */
+    /* 🔹 ปุ่มกากบาท */
     .close-btn {
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: 10px;
+      right: 12px;
       background: transparent;
       border: none;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: bold;
-      color: #555;
+      color: #666;
       cursor: pointer;
       transition: color 0.3s;
       line-height: 1;
@@ -125,7 +126,7 @@
       height: 100%;
       transition: padding-top 0.5s ease;
     }
-    .iframe-container.with-notice { padding-top: 120px; /* เฉพาะ desktop */ }
+    .iframe-container.with-notice { padding-top: 130px; }
     iframe {
       width: 100%;
       height: 100%;
@@ -136,20 +137,14 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      -webkit-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
       border: 6px solid #f3f3f3;
       border-top: 6px solid #3498db;
       border-radius: 50%;
       width: 50px;
       height: 50px;
-      -webkit-animation: spin 1s linear infinite;
       animation: spin 1s linear infinite;
       z-index: 10;
-    }
-    @-webkit-keyframes spin {
-      0% { -webkit-transform: translate(-50%, -50%) rotate(0deg); }
-      100% { -webkit-transform: translate(-50%, -50%) rotate(360deg); }
     }
     @keyframes spin {
       0% { transform: translate(-50%, -50%) rotate(0deg); }
@@ -158,28 +153,27 @@
 
     /* 🔹 Responsive */
     @media (max-width: 600px) {
-      .browser-notice { font-size: 0.9rem; padding: 10px; }
-      .browser-notice h4 { font-size: 0.95rem; }
-      .copy-button { font-size: 0.85rem; padding: 5px 12px; }
-      .close-btn { width: 24px; height: 24px; font-size: 14px; line-height: 22px; }
+      .browser-notice { font-size: 0.9rem; padding: 14px 16px; }
+      .browser-notice h4 { font-size: 0.95rem; gap: 4px; }
+      .copy-button { font-size: 0.85rem; padding: 6px 14px; }
+      .close-btn { font-size: 18px; top: 8px; right: 10px; }
     }
   </style>
 </head>
+
 <body>
 
   <div id="browser-notice" class="browser-notice">
     <button class="close-btn" id="close-notice">×</button>
     <h4>
-      💡 ແນະນຳໃຫ້ໃຊ້ 
-      <img src="https://lh3.googleusercontent.com/d/13Grt7NSQt0N9oPL4DzsGaP8qTDmP5R9F" 
-           alt="Google Chrome" 
-           style="width:18px; height:18px; vertical-align:middle; margin-right:4px;">
-      Google Chrome 
+      💡 ແນະນຳໃຫ້ໃຊ້
+      <img src="https://lh3.googleusercontent.com/d/13Grt7NSQt0N9oPL4DzsGaP8qTDmP5R9F"
+           alt="Google Chrome">
+      Google Chrome
       <span style="font-weight:normal;">(Android/Windows/Mac)</span>
-      ຫຼື  
-      <img src="https://lh3.googleusercontent.com/d/1IITwujf-QO26YU26ubvYh4whSPf9S_Rm" 
-           alt="Safari" 
-           style="width:18px; height:18px; vertical-align:middle; margin-right:4px;">
+      ຫຼື
+      <img src="https://lh3.googleusercontent.com/d/1IITwujf-QO26YU26ubvYh4whSPf9S_Rm"
+           alt="Safari">
       Safari <span style="font-weight:normal;">(iPhone/iPad)</span>
     </h4>
     <p>
@@ -187,6 +181,15 @@
       ກະລຸນາ Copy ລິ້ງນີ້ໄປເປີດໃນ Chrome ຫຼື Safari (iPhone/iPad)
     </p>
     <button id="copy-link-btn" class="copy-button">Copy ລິ້ງ</button>
+  </div>
+
+  <div class="iframe-container" id="main-content">
+    <div class="loader" id="loader"></div>
+    <iframe
+      src="https://script.google.com/macros/s/AKfycbww_nQlj1CGD5rHTHFt1TObkMgccohidmq5tciuFPhS-XIin-0t-YS-6Xy30dtbO0Ua/exec"
+      title="M-IT Support"
+      allowfullscreen>
+    </iframe>
   </div>
 
   <script>
@@ -197,15 +200,8 @@
       const copyBtn = document.getElementById('copy-link-btn');
       const closeBtn = document.getElementById('close-notice');
       const mainContent = document.getElementById('main-content');
-      const recommendationTitle = document.getElementById('recommendation-title');
-      const recommendationText = document.getElementById('recommendation-text');
       let hideTimeout;
 
-      // --- NEW BROWSER DETECTION ---
-      function isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      }
-      
       function isChrome() {
         const isChromium = window.chrome;
         const winNav = window.navigator;
@@ -213,15 +209,9 @@
         const isOpera = typeof window.opr !== "undefined";
         const isEdge = winNav.userAgent.indexOf("Edg") > -1;
         const isIOSChrome = winNav.userAgent.match("CriOS");
-        return (isIOSChrome || (isChromium && vendorName === "Google Inc." && !isOpera && !isEdge));
+        return (isIOSChrome ||
+                (isChromium && vendorName === "Google Inc." && !isOpera && !isEdge));
       }
-
-      function isSafari() {
-        // Detects Safari on desktop and iOS, excluding Chrome/Edge.
-        return /^((?!chrome|crios|edg).)*safari/i.test(navigator.userAgent);
-      }
-      // --- END NEW BROWSER DETECTION ---
-
 
       function showNotice() {
         if (window.innerWidth <= 600) {
@@ -237,25 +227,13 @@
         notice.classList.remove("show");
         notice.classList.add("hide");
         mainContent.classList.remove("with-notice");
-        setTimeout(() => { 
-          notice.style.display = "none"; 
-          notice.classList.remove("hide", "desktop", "mobile"); 
+        setTimeout(() => {
+          notice.style.display = "none";
+          notice.classList.remove("hide", "desktop", "mobile");
         }, 500);
       }
-      
-      // --- UPDATED LOGIC ---
-      // Show notice if the browser is NOT Chrome AND NOT Safari.
-      if (!isChrome() && !isSafari()) {
-        if (isIOS()) {
-          // On iPhone/iPad, recommend Safari
-          recommendationTitle.innerHTML = `💡 ແນະນຳໃຫ້ໃຊ້ <img src="https://lh3.googleusercontent.com/d/13Grt7NSQt0N9oPL4DzsGaP8qTDmP5R9F" alt="Safari" style="width:18px; height:18px; vertical-align:middle;"> Safari`;
-          recommendationText.innerText = `ເພື່ອປະສົບການທີ່ດີທີ່ສຸດ, ກະລຸນາ Copy ລິ້ງນີ້ໄປເປີດໃນ Safari`;
-        } else {
-          // On other devices (Android, Desktop), recommend Chrome
-          recommendationTitle.innerHTML = `💡 ແນະນຳໃຫ້ໃຊ້ <img src="https://lh3.googleusercontent.com/d/1IITwujf-QO26YU26ubvYh4whSPf9S_Rm" alt="Chrome" style="width:18px; height:18px; vertical-align:middle;"> Google Chrome`;
-          recommendationText.innerText = `ເພື່ອປະສົບການທີ່ລື່ນໄຫລ, ກະລຸນາ Copy ລິ້ງນີ້ໄປເປີດໃນ Chrome`;
-        }
 
+      if (!isChrome()) {
         showNotice();
         if (window.innerWidth > 600) {
           mainContent.classList.add("with-notice");
@@ -268,9 +246,10 @@
         iframe.style.visibility = 'visible';
       };
 
+      // ✅ Clipboard รองรับ Safari
       copyBtn.addEventListener('click', function() {
-        const urlToCopy = window.location.href; // Copies the current page URL
-        
+        const urlToCopy = 'https://m-it-application.github.io/test_01/';
+
         function success() {
           copyBtn.textContent = '✅ ສຳເນົາແລ້ວ';
           setTimeout(() => copyBtn.textContent = 'Copy ລິ້ງ', 2000);
