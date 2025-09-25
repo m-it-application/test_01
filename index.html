@@ -238,7 +238,7 @@
         if (window.innerWidth > 600) {
           mainContent.classList.add("with-notice");
         }
-        hideTimeout = setTimeout(hideNotice, 10000);
+        hideTimeout = setTimeout(hideNotice, 20000);
       }
 
       iframe.onload = function () {
@@ -252,7 +252,7 @@
 
         function success() {
           copyBtn.textContent = '✅ ສຳເນົາແລ້ວ';
-          setTimeout(() => copyBtn.textContent = 'Copy ລິ້ງ', 2000);
+          setTimeout(() => copyBtn.textContent = 'Copy ລິ້ງ', 5000);
           clearTimeout(hideTimeout);
           hideNotice();
         }
