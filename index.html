@@ -86,8 +86,15 @@
       color: #34495e;
     }
 
-    .copy-button {
-      background-color: #3498db;
+    /* ▼▼▼ CSS ที่เพิ่มเข้ามาใหม่ ▼▼▼ */
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 12px; /* ระยะห่างระหว่างปุ่ม */
+      margin-top: 10px;
+    }
+    
+    .copy-button, .open-button {
       color: #fff;
       border: none;
       padding: 8px 16px;
@@ -97,8 +104,16 @@
       transition: background-color 0.3s, transform 0.15s;
       -webkit-tap-highlight-color: transparent;
     }
+
+    .copy-button { background-color: #3498db; }
     .copy-button:hover { background-color: #2980b9; }
-    .copy-button:active { transform: scale(0.96); }
+    
+    .open-button { background-color: #27ae60; } /* สีเขียวสำหรับปุ่มเปิด */
+    .open-button:hover { background-color: #229954; }
+
+    .copy-button:active, .open-button:active { transform: scale(0.96); }
+    /* ▲▲▲ สิ้นสุด CSS ที่เพิ่มเข้ามาใหม่ ▲▲▲ */
+
 
     /* 🔹 ปุ่มกากบาท */
     .close-btn {
@@ -155,7 +170,7 @@
     @media (max-width: 600px) {
       .browser-notice { font-size: 0.9rem; padding: 14px 16px; }
       .browser-notice h4 { font-size: 0.95rem; gap: 4px; }
-      .copy-button { font-size: 0.85rem; padding: 6px 14px; }
+      .copy-button, .open-button { font-size: 0.85rem; padding: 6px 14px; }
       .close-btn { font-size: 18px; top: 8px; right: 10px; }
     }
   </style>
@@ -167,21 +182,22 @@
     <button class="close-btn" id="close-notice">×</button>
     <h4>
       💡 ແນະນຳໃຫ້ໃຊ້
-      <img src="https://lh3.googleusercontent.com/d/13Grt7NSQt0N9oPL4DzsGaP8qTDmP5R9F"
-           alt="Google Chrome">
+      <img src="https://lh3.googleusercontent.com/d/13Grt7NSQt0N9oPL4DzsGaP8qTDmP5R9F" alt="Google Chrome">
       Google Chrome
       <span style="font-weight:normal;">(Android/Windows/Mac)</span>
       ຫຼື
-      <img src="https://lh3.googleusercontent.com/d/1IITwujf-QO26YU26ubvYh4whSPf9S_Rm"
-           alt="Safari">
+      <img src="https://lh3.googleusercontent.com/d/1IITwujf-QO26YU26ubvYh4whSPf9S_Rm" alt="Safari">
       Safari <span style="font-weight:normal;">(iPhone/iPad)</span>
     </h4>
     <p>
-      ເພື່ອປະສົບການໃນການທ່ອງເວັບທີ່ລື່ນໄຫລ 👉 
-      ກະລຸນາ Copy ລິ້ງນີ້ໄປເປີດໃນ Google Chrome ຫຼື Safari
+      ເພື່ອປະສົບການທີ່ດີທີ່ສຸດ, ກະລຸນາເປີດໃນເບົາເຊີທີ່ແນະນຳ.
     </p>
-    <button id="copy-link-btn" class="copy-button">Copy Link</button>
-  </div>
+
+    <div class="button-group">
+        <button id="open-browser-btn" class="open-button">ເປີດໃນເບົາເຊີ</button>
+        <button id="copy-link-btn" class="copy-button">Copy Link</button>
+    </div>
+    </div>
 
   <div class="iframe-container" id="main-content">
     <div class="loader" id="loader"></div>
@@ -200,6 +216,11 @@
       const copyBtn = document.getElementById('copy-link-btn');
       const closeBtn = document.getElementById('close-notice');
       const mainContent = document.getElementById('main-content');
+      
+      // ▼▼▼ JavaScript ที่เพิ่มเข้ามาใหม่ ▼▼▼
+      const openBtn = document.getElementById('open-browser-btn'); 
+      // ▲▲▲ สิ้นสุด JavaScript ที่เพิ่มเข้ามาใหม่ ▲▲▲
+
       let hideTimeout;
 
       function isChrome() {
@@ -210,7 +231,7 @@
         const isEdge = winNav.userAgent.indexOf("Edg") > -1;
         const isIOSChrome = winNav.userAgent.match("CriOS");
         return (isIOSChrome ||
-                (isChromium && vendorName === "Google Inc." && !isOpera && !isEdge));
+          (isChromium && vendorName === "Google Inc." && !isOpera && !isEdge));
       }
 
       function showNotice() {
@@ -252,7 +273,7 @@
 
         function success() {
           copyBtn.textContent = '✅ ສຳເນົາແລ້ວ';
-          setTimeout(() => copyBtn.textContent = 'Copy ລິ້ງ', 2000);
+          setTimeout(() => copyBtn.textContent = 'Copy Link', 2000);
           clearTimeout(hideTimeout);
           hideNotice();
         }
@@ -273,6 +294,29 @@
           fallback();
         }
       });
+      
+      // ▼▼▼ JavaScript ที่เพิ่มเข้ามาใหม่ ▼▼▼
+      // ฟังก์ชันสำหรับปุ่ม "เปิดในเบราว์เซอร์"
+      openBtn.addEventListener('click', function() {
+        const targetUrl = 'https://m-it-application.github.io/test_01/';
+        const ua = navigator.userAgent.toLowerCase();
+        const isIOS = /iphone|ipad|ipod/.test(ua);
+        const isAndroid = /android/.test(ua);
+
+        if (isIOS) {
+          // สำหรับ iOS, ทำการ redirect ตามปกติ
+          window.location.href = targetUrl;
+        } else if (isAndroid) {
+          // สำหรับ Android, ใช้ intent เพื่อพยายามเปิดใน Chrome
+          window.location.href = `intent://${targetUrl.replace(/https\?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`;
+        } else {
+          // สำหรับอุปกรณ์อื่นๆ (Desktop), เปิดในแท็บใหม่
+          window.open(targetUrl, '_blank');
+        }
+        
+        hideNotice(); // ซ่อนกล่องแจ้งเตือนหลังกด
+      });
+      // ▲▲▲ สิ้นสุด JavaScript ที่เพิ่มเข้ามาใหม่ ▲▲▲
 
       closeBtn.addEventListener('click', function() {
         clearTimeout(hideTimeout);
